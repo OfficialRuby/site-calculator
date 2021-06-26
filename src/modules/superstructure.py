@@ -1,4 +1,11 @@
 class Tools:
+    # TODO: strip wall thickness value
+    def getRingsAndBarDia():
+        diamOfBars = float(input("what is the diameter of bars in lintel: "))
+        diamOfRings = float(input("what is the diameter of rings in lintel: "))
+        weightOfBars = ((diamOfBars*diamOfBars)/162)  # refactor with math lib
+        weightOfRings = ((diamOfRings*diamOfRings)/162)
+        return weightOfBars, weightOfRings  # global
 
     def getWindowsValue():
         blockThickness = float(input("Enter the thickness for block: "))
@@ -8,7 +15,7 @@ class Tools:
         windowWidths = []
         windowUnits = []
         windowsValues = []
-        # Windows Lintel
+        # Windows for Lintel
         windowLintelLens = []
         windowLintelUnits = []
         windowLintelValues = []
@@ -16,6 +23,19 @@ class Tools:
         windowLintelFormworkLengths = []
         windowLintelFormworkUnits = []
         windowLintelFormworkValues = []
+        # Reinforcement in Lintel Bars
+        windowLintelReinforcementLengths = []
+        windowLintelReinforcementUnits = []
+        windowLintelReinforcementValues = []
+        # Reinforcement in Lintel Rings
+        windowLintelReinforcementRingLengths = []
+        windowLintelReinforcementRingUnits = []
+        windowLintelReinforcementRingValues = []
+        # Windows Reavels
+        windowRevLengths = []
+        windowRevWidths = []
+        windowRevUnits = []
+        windowsRevValues = []
 
         windowTypes = int(windowTypes)
         for i in range(1):
@@ -26,11 +46,15 @@ class Tools:
                 windowLengths.append((winLenVal))
                 windowLintelLens.append(winLenVal)
                 windowLintelFormworkLengths.append(winLenVal)
+                windowLintelReinforcementLengths.append(winLenVal)
+                windowLintelReinforcementRingLengths.append(winLenVal)
+                windowRevLengths.append(winLenVal)
 
             for winWid in range(windowTypes):
                 winWidVal = float(input(
                     "Enter the width for window type %s : " % (winWid+1)))
                 windowWidths.append(winWidVal)
+                windowRevWidths.append(winWidVal)
 
             for winUnit in range(windowTypes):
                 winUnitVal = float(input(
@@ -38,6 +62,9 @@ class Tools:
                 windowUnits.append(winUnitVal)
                 windowLintelUnits.append(winUnitVal)
                 windowLintelFormworkUnits.append(winUnitVal)
+                windowLintelReinforcementUnits.append(winUnitVal)
+                windowLintelReinforcementRingUnits.append(winUnitVal)
+                windowRevUnits.append(winUnitVal)
 
             for value in range(windowTypes):
                 windowsValue = (
@@ -46,21 +73,34 @@ class Tools:
                     (windowLintelLens[value] + 0.45) * 0.23 * windowLintelUnits[value] * blockThickness)
                 windowLintelFormworkValue = (
                     (windowLintelLens[value] + 0.45) * 0.23 * windowLintelUnits[value] * 3)
+                windowLintelReinforcementValue = ((windowLintelReinforcementLengths[value]+0.65)*4 * windowLintelReinforcementUnits[value]*weightOfBars)
+                windowLintelReinforcementRingValue = (lenghtOfRings * ((windowLintelReinforcementRingLengths[value]+0.45)/0.2)+1) * windowLintelReinforcementRingUnits[value] * weightOfRings
+                windowsRevValue = (((windowRevLengths[value]*2) + (windowRevWidths[value]*2))*windowRevUnits)
 
                 windowsValues.append(windowsValue)
                 windowLintelValues.append(windowLintelValue)
                 windowLintelFormworkValues.append(windowLintelFormworkValue)
+                windowLintelReinforcementValues.append(windowLintelReinforcementValue)
+                windowLintelReinforcementRingValues.append(windowLintelReinforcementRingValue)
+                windowsRevValues.append(windowsRevValue)
                 allWindowLintelFormworkValue = sum(windowLintelFormworkValues)
                 allWndowsValue = sum(windowsValues)
                 allWindowsLintelValue = sum(windowLintelValues)
+                windowLintelReinforcementValue = sum(windowLintelReinforcementValues)
+                allWindowLintelReinforcementRingValue = sum(windowLintelReinforcementRingValues)
+                allWindowsRevValue = sum(windowsRevValues)
                 allWndowsValue = round(allWndowsValue, 2)
                 allWindowsLintelValue = round(allWindowsLintelValue, 2)
                 allWindowLintelFormworkValue = round(
                     allWindowLintelFormworkValue, 2)
+                windowLintelReinforcementValue = round(windowLintelReinforcementValue, 2)
+                allWindowLintelReinforcementRingValue = round(allWindowLintelReinforcementRingValue, 2)
+                allWindowsRevValue = round(allWindowsRevValue, 2)
+
                 print("Total windows value is %s\n" % allWndowsValue)
                 print("Total Lintel windows value is %s" %
                       allWindowsLintelValue)
-        return allWndowsValue, allWindowsLintelValue, allWindowLintelFormworkValue
+        return allWndowsValue, allWindowsLintelValue, allWindowLintelFormworkValue, windowLintelReinforcementValue, allWindowLintelReinforcementRingValue, allWindowsRevValue
 
     def getDoorsValue():
         doorTypes = input("How many type of door is used: ")
@@ -77,6 +117,18 @@ class Tools:
         doorLintelFormworkLengths = []
         doorLintelFormworkUnits = []
         doorLintelFormworkValues = []
+        # Reinforcement in Lintel Bars
+        doorLintelReinforcementLengths = []
+        doorLintelReinforcementUnits = []
+        doorLintelReinforcementValues = []
+        # Reinforcement in Lintel Rings
+        doorLintelReinforcementRingLengths = []
+        doorLintelReinforcementRingUnits = []
+        doorLintelReinforcementRingValues = []
+        # Door Finishing Area
+        doorFinishingLengths = []
+        doorFinishingUnits = []
+        doorFinishingValues = []
 
         doorTypes = int(doorTypes)
         for i in range(1):
@@ -87,6 +139,9 @@ class Tools:
                 doorLengths.append((doorLenVal))
                 doorLintelLengths.append(doorLenVal)
                 doorLintelFormworkLengths.append(doorLenVal)
+                doorLintelReinforcementLengths.append(doorLenVal)
+                doorLintelReinforcementRingLengths.append(doorLenVal)
+                doorFinishingLengths.append((doorLenVal))
 
             for doorWid in range(doorTypes):
                 doorWidVal = int(input(
@@ -99,6 +154,9 @@ class Tools:
                 doorUnits.append(doorUnitVal)
                 doorLintelUnits.append(doorUnitVal)
                 doorLintelFormworkUnits.append(doorUnitVal)
+                doorLintelReinforcementUnits.append(doorUnitVal)
+                doorLintelReinforcementRingUnits.append(doorUnitVal)
+                doorFinishingUnits.append(doorUnitVal)
 
             for value in range(doorTypes):
                 doorValue = (
@@ -108,9 +166,15 @@ class Tools:
                 doorValues.append(doorValue)
                 doorLintelFormworkValue = (
                     (doorLintelLengths[value] + 0.45) * 0.23 * doorLintelUnits[value] * 3)
+                doorLintelReinforcementValue = ((doorLintelReinforcementLengths[value] + 0.65)*4*doorLintelReinforcementUnits[value]*weightOfBars)
+                doorLintelReinforcementRingValue = (lenghtOfRings * ((doorLintelReinforcementRingLengths[value]+0.45)/0.2)+1) * doorLintelReinforcementRingUnits[value] * weightOfRings
+                doorFinishingValue = (doorFinishingLengths[value]*doorFinishingUnits[value]*wtAF)
+
                 doorValues.append(doorValue)
                 doorLintelValues.append(doorLintelValue)
                 doorLintelFormworkValues.append(doorLintelFormworkValue)
+                doorLintelReinforcementValues.append(doorLintelReinforcementValue)
+                doorFinishingValues.append(doorFinishingValue)
 
         allDoorsValue = sum(doorValues)
         allDoorsValue = round(allDoorsValue, 2)
@@ -118,8 +182,14 @@ class Tools:
         allDoorsLintelValue = round(allDoorsLintelValue, 2)
         allDoorLintelFormworkValue = sum(doorLintelFormworkValues)
         allDoorLintelFormworkValue = round(allDoorLintelFormworkValue, 2)
+        allDoorLintelReinforcementValue = sum(doorLintelReinforcementValues)
+        doorLintelReinforcementValue = round(doorLintelReinforcementValue, 2)
+        allDoorLintelReinforcementRingValue = sum(doorLintelReinforcementRingValues)
+        allDoorLintelReinforcementRingValue = round(doorLintelReinforcementRingValue, 2)
+        allDoorFinishingValues = sum(doorFinishingValues)
+        alldoorFinishingValues = round(doorFinishingValues, 2)
         print("Total windows value is %s" % allDoorsValue)
-        return allDoorsValue, allDoorsLintelValue, allDoorLintelFormworkValue
+        return allDoorsValue, allDoorsLintelValue, allDoorLintelFormworkValue, doorLintelReinforcementValue, allDoorLintelReinforcementRingValue, alldoorFinishingValue
 
     def getOtherOpeningsValue():
         opnTypes = input("How many type opening is present: ")
@@ -136,6 +206,14 @@ class Tools:
         opnLintelFormworkLenghts = []
         opnLintelFormworkUnits = []
         opnLintelFormworkValues = []
+        # Other opening reinforcement in lintel Bars
+        opnLintelReinforcementLengths = []
+        opnLintelReinforcementUnits = []
+        opnLintelReinforcementValues = []
+        # Reinforcement in Lintel Rings
+        opnLintelReinforcementRingLengths = []
+        opnLintelReinforcementRingUnits = []
+        opnLintelReinforcementRingValues = []
 
         opnTypes = int(opnTypes)
         for i in range(1):
@@ -146,6 +224,8 @@ class Tools:
                 opnLengths.append((opnLenVal))
                 opnLintelLenghts.append(opnLenVal)
                 opnLintelFormworkLenghts.append(opnLenVal)
+                opnLintelReinforcementLengths.append(opnLenVal)
+                opnLintelReinforcementRingLengths.append(opnLenVal)
 
             for opnWid in range(opnTypes):
                 opnWidVal = int(input(
@@ -158,6 +238,8 @@ class Tools:
                 opnUnits.append(opnUnitVal)
                 opnLintelUnits.append(opnUnitVal)
                 opnLintelFormworkUnits.append(opnUnitVal)
+                opnLintelReinforcementUnits.append(opnUnitVal)
+                opnLintelReinforcementRingUnits.append(opnUnitVal)
 
             for value in range(opnTypes):
                 opnValue = (
@@ -167,17 +249,25 @@ class Tools:
                 opnValues.append(opnValue)
                 opnLintelFormworkValue = (
                     (opnLengths[value] + 0.45) * 0.23 * opnLintelUnits[value] * blockThickness)
+                opnLintelReinforcementValue = ((opnLintelReinforcementLengths[value]+0.65)*4*opnLintelReinforcementUnits[value]*weightOfBars)
+                opnLintelReinforcementRingValue = (lenghtOfRings * ((opnLintelReinforcementRingLengths[value]+0.45)/0.2)+1) * opnLintelReinforcementRingUnits[value] * weightOfRings
                 opnValues.append(opnValue)
                 opnLintelValues.append(opnLintelValue)
                 opnLintelFormworkValues.append(opnLintelFormworkValue)
+                opnLintelReinforcementValues.append(opnLintelReinforcementValue)
+                opnLintelReinforcementRingValues.append(opnLintelReinforcementRingValue)
                 allopnValues = sum(opnValues)
                 allOpnLintelValues = sum(opnLintelValues)
                 allOpnLintelFormworkValues = sum(opnLintelFormworkValues)
+                allOpnLintelReinforcementValues = sum(opnLintelReinforcementValues)
+                allOpnLintelReinforcementRingValues = sum(opnLintelReinforcementRingValues)
                 allopnValues = round(allopnValues, 2)
                 allOpnLintelValues = round(opnLintelValues, 2)
                 allopnLintelFormworkValues = round(allopnLintelFormworkValues)
+                allOpnLintelReinforcementValues = round(opnLintelReinforcementValues)
+                allOpnLintelReinforcementRingValues = round(allOpnLintelReinforcementRingValues, 2)
         print("Total other openings value is %s" % allopnValues)
-        return opnLintelValues, allOpnLintelValues, allopnLintelFormworkValues
+        return opnLintelValues, allOpnLintelValues, allopnLintelFormworkValues, allOpnLintelReinforcementValues, allOpnLintelReinforcementRingValues
 
     def getRecessValue():
         rcsTypes = input("How many type recess is present: ")
@@ -213,16 +303,47 @@ class Tools:
         return answer
 
     def getGirth():
-        girthBIF = int(
-            input('Enter the girth of blockwork in foundation: '))
-        girthBAF = int(
-            input("Enter girth for blockwork above foundation: "))
+        girthBIF = int(input('Enter the girth of blockwork in foundation: '))
+        girthBAF = int(input("Enter girth for blockwork above foundation: "))
         print(girthBIF, girthBAF)
         return girthBIF, girthBAF
 
     def getWallThickness():
-        wtIF = int(input("Enter the wall thickness in foundation: "))
-        wtAF = int(input("Enter the wall thickness above foundation: "))
+        global wiIF, wtAF, spread, lenghtOfRings
+        wtIF = float(input("Enter the wall thickness in foundation (in meter): "))
+        wtAF = float(input("Enter the wall thickness above foundation (in meter): "))
+        if wtAF == 0.23:
+            lenghtOfRings = 0.82
+        else:
+            lenghtOfRings = 0.54
+
         spread = wtIF
         print(wtIF, wtAF, spread)
-        return wtAF, wtAF, spread
+        return wtIF, wtAF, spread, lenghtOfRings
+
+    def blckWkAboveGndLvl():
+        headRoom = float(input("Enter the height of blockwork in superstructure: "))
+        blockworkInSuper = girthBAF * headRoom
+        sumOfAllOpenings = allWndowsValue + allDoorsValue + opnLintelValues
+        totalLintelArea = (allWindowsLintelValue + allDoorsLintelValue + allOpnLintelValues)/wtAF
+        totalBlockworkInSuper = blockworkInSuper - (sumOfAllOpenings+totalLintelArea)
+        return totalBlockworkInSuper
+
+    def platering():
+        headRoom = float(input("Enter the height of blockwork in superstructure: "))
+        plastblockworkInSuper = (girthBAF * headRoom) * 2
+        plastsumOfAllOpenings = (allWndowsValue + allDoorsValue + opnLintelValues)*2
+        totalPlastBlockworkInSuper = blockworkInSuper - (sumOfAllOpenings+totalLintelArea)
+        return totalPlastBlockworkInSuper
+
+    def floorFinish():
+        flrFinish = areaOfBld - recess - ((giAF * wtAF) - alldoorFinishingValue)
+        return flrFinish
+
+    def cielingFinish():
+        ceilingFinish = areaOfBld - recess - (giAF * wtAF)
+        return ceilingFinish
+
+    def windowRevels():
+        totalWindowRev = allWindowsRevValue
+        return totalWindowRev
