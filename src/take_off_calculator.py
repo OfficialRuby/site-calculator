@@ -3,7 +3,6 @@ import sys
 import time
 import os
 from modules.structure import Struct
-from modules.superstructure import Super
 
 try:
     print("Creating folder for take off report")
@@ -43,11 +42,12 @@ try:
     18. Concrete in Lintel
     19. Reiforcement in Lintel
     20. Formwork in Lintel
-    21. Plastering/Rendering
-    22. Painting
-    23. Floor Finishes
-    24. Ceiling Finishes
-    25. Window Revel
+    21. Blockwork in Superstructure
+    22. Plastering/Rendering
+    23. Painting
+    24. Floor Finishes
+    25. Ceiling Finishes
+    26. Window Revel
     ''')
 
     status = True
@@ -55,7 +55,7 @@ try:
         userChoice = input("Please enter the value that corresponds with what you want to calculate: ")
         userChoice = str(userChoice)
         if userChoice == "Q":
-
+            Struct.generateSpreadSheet()
             print("Stopping program")
             print(userChoice)
             status = False
@@ -121,16 +121,20 @@ try:
         elif userChoice == '20':
             Struct.formWorkInLintel()
         elif userChoice == '21':
-            Struct.plasteringRendering()
+            Struct.blckWkAboveGndLvl()
         elif userChoice == '22':
             Struct.plasteringRendering()
         elif userChoice == '23':
-            Struct.floorFinish()
+            Struct.plasteringRendering()
         elif userChoice == '24':
-            Struct.cielingFinish()
+            Struct.floorFinish()
         elif userChoice == '25':
+            Struct.cielingFinish()
+        elif userChoice == '26':
             Struct.windowRevels()
         else:
             print("Invalid Input")
 except KeyboardInterrupt:
     print("\nProgram terminated by user")
+except ValueError:
+    print("\nPlease input a valid response")

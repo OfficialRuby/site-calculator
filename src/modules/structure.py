@@ -1,6 +1,15 @@
+import pandas as pd
+import numpy as np
+import csv
+
+
 class Struct:
     def getSoftInit():
-        global bldLen, bldWid, spread, blockThicknessInFdn, girthBIF
+        global exportValueName, exportValue, exportValueUnit
+        exportValueName = []
+        exportValue = []
+        exportValueUnit = []
+        global bldLen, bldWid, spread, blockThicknessInFdn, girthBIF, girthBAF
         print("Please initialize the required values before you continue\n")
         bldLen = float(input(("Enter the length of the building: ")))
         bldWid = float(input("Enter the width of the building: "))
@@ -13,13 +22,21 @@ class Struct:
         print("Calculating for Site Clearance")
         siteClr = ((bldLen+2) * (bldWid+2))
         print(siteClr)
+        unit = 'M2'
+        exportValueName.append('Site Clearance')
+        exportValue.append(siteClr)
+        exportValueUnit.append(unit)
         return siteClr
 
     def topSoilExcavation():
         global tsExcav
         print("Calculating for Top Soil Excavation")
         tsExcav = ((bldLen+(2*spread)) * (bldWid+(2*spread)))
+        unit = 'M2'
         print(tsExcav)
+        exportValueName.append("Top Soil Excavation")
+        exportValue.append(tsExcav)
+        exportValueUnit.append(unit)
         return tsExcav
 
     # Top soil removal
@@ -28,6 +45,10 @@ class Struct:
         global remOfTSE
         remOfTSE = tsExcav * 0.15
         print(remOfTSE)
+        unit = "M3"
+        exportValueName.append("Removal of Top Soil Excavation")
+        exportValue.append(remOfTSE)
+        exportValueUnit.append(unit)
         return remOfTSE
 
     # Trench Excavation
@@ -37,6 +58,11 @@ class Struct:
         widOfFdn = float(input("Enter the width of the foundation: "))
         depthOfFdn = float(input("Enter the depth of the foundation: "))
         trenchExcav = (girthBIF * widOfFdn * depthOfFdn)
+        unit = "M3"
+        exportValueName.append("Trench Excavation")
+        exportValue.append(trenchExcav)
+        exportValueUnit.append(unit)
+
         print(trenchExcav)
         return trenchExcav, depthOfFdn
 
@@ -46,6 +72,10 @@ class Struct:
         global levAndComp
         levAndComp = girthBIF * widOfFdn
         print(levAndComp)
+        unit = "M2"
+        exportValueName.append("Leveling and Compacting")
+        exportValue.append(levAndComp)
+        exportValueUnit.append(unit)
         return levAndComp
 
     # Concrete Footing
@@ -56,6 +86,10 @@ class Struct:
         concFT = girthBIF * widOfFdn * ftThickness
         concFT = round(concFT, 2)
         print(concFT)
+        unit = "M3"
+        exportValueName.append("Concrete Footing")
+        exportValue.append(concFT)
+        exportValueUnit.append(unit)
         return concFT, ftThickness
 
     # Blockwork in foundation
@@ -66,6 +100,10 @@ class Struct:
         blockWInFDN = girthBIF * blckWkHeight * blockThicknessInFdn
         expVal = girthBIF * blckWkHeight  # Value to be exported
         print(blockWInFDN)
+        unit = "M2"
+        exportValueName.append("Blockwork in Foundation")
+        exportValue.append(expVal)
+        exportValueUnit.append(unit)
         return blockWInFDN, expVal
 
     # Backfilling
@@ -76,7 +114,10 @@ class Struct:
         remSurplusOffsite = blockWInFDN2 + concFT
         bckFilling = trenchExcav - remSurplusOffsite
         print(bckFilling)
-        # Export remSurplusOffsite in Removal of Surplus Offsite
+        unit = 'M3'
+        exportValueName.append("Backfilling")
+        exportValue.append(bckFilling)
+        exportValueUnit.append(unit)
         return bckFilling, remSurplusOffsite
 
     # Removal of surplus offsite
@@ -85,6 +126,10 @@ class Struct:
         global remSurplusOffsite
         remSurplusOffsite
         print(remSurplusOffsite)
+        unit = 'M3'
+        exportValueName.append("Removal of Surplus Offsite")
+        exportValue.append(remSurplusOffsite)
+        exportValueUnit.append(unit)
         return remSurplusOffsite
 
     # Laterite Earth Filling
@@ -98,6 +143,10 @@ class Struct:
         fillingArea = (areaOfBld - allRcsValues - peremOfWall)
         latEarthFill = fillingArea * thicknessOfLatFillling
         latEarthFill = round(latEarthFill, 2)
+        unit = 'M3'
+        exportValueName.append("Laterite Earth Filling")
+        exportValue.append(latEarthFill)
+        exportValueUnit.append(unit)
         print(latEarthFill)
         return latEarthFill, fillingArea, areaOfBld, peremOfWall
 
@@ -109,6 +158,10 @@ class Struct:
             input("Enter the thickness of hardcore filling: "))
         hardcoreFill = fillingArea * thicknessOfCoreFillling
         print(hardcoreFill)
+        unit = 'M3'
+        exportValueName.append("Hardcore Filling")
+        exportValue.append(hardcoreFill)
+        exportValueUnit.append(unit)
         return hardcoreFill
 
     # Floor reinforcement
@@ -117,6 +170,10 @@ class Struct:
         global floorReinf
         floorReinf = areaOfBld - allRcsValues
         print(floorReinf)
+        unit = 'M2'
+        exportValueName.append("Floor Reinforcement")
+        exportValue.append(floorReinf)
+        exportValueUnit.append(unit)
         return floorReinf
 
     # Damp proof course
@@ -125,6 +182,10 @@ class Struct:
         global peremOfWall
         PDC = peremOfWall
         print(peremOfWall)
+        unit = 'M2'
+        exportValueName.append("Damp Proof Course")
+        exportValue.append(peremOfWall)
+        exportValueUnit.append(unit)
         return peremOfWall
 
     # Damp proof membrane
@@ -133,6 +194,10 @@ class Struct:
         global DPM
         DPM = floorReinf
         print(DPM)
+        unit = "M2"
+        exportValueName.append("Damp Proof Membrane")
+        exportValue.append(DPM)
+        exportValueUnit.append(unit)
         return DPM
 
     # Leveling and compacting on surface of filling
@@ -141,15 +206,23 @@ class Struct:
         global surfLvlAndComp
         surfLvlAndComp = fillingArea
         print(surfLvlAndComp)
+        unit = 'M2'
+        exportValueName.append("Leveling and Compacting on Surface of Filling")
+        exportValue.append(surfLvlAndComp)
+        exportValueUnit.append(unit)
         return surfLvlAndComp
 
     # Oversite concrete
 
     def oversiteConcrete():
-        global oversiteConc
+        global oversiteConc, floorThickness
         floorThickness = float(input("Enter the floor thickness: "))
         oversiteConc = floorReinf * floorThickness
         print(oversiteConc)
+        unit = 'M3'
+        exportValueName.append("Oversite Concrete")
+        exportValue.append(oversiteConc)
+        exportValueUnit.append(unit)
         return oversiteConc
 
     # Formwork for oversite concrete
@@ -159,6 +232,10 @@ class Struct:
         bldVal = (bldLen * 2) + (bldWid * 2)
         oversiteConcFormwork = bldVal * floorThickness
         print(oversiteConcFormwork)
+        unit = "M2"
+        exportValueName.append("Formwork for Oversite Concrete")
+        exportValue.append(oversiteConcFormwork)
+        exportValueUnit.append(unit)
         return oversiteConcFormwork
 
     def getRecessValue():
@@ -238,7 +315,7 @@ class Struct:
         for i in range(1):
             # Loop through to collect the lenght values
             for winLen in range(windowTypes):
-                winLenVal = int(input(
+                winLenVal = float(input(
                     "Enter the lenght for window type %s : " % (winLen+1)))
                 windowLengths.append((winLenVal))
                 windowLintelLens.append(winLenVal)
@@ -300,7 +377,7 @@ class Struct:
         return allWndowsValue, allWindowsLintelValue, allWindowLintelFormworkValue, windowLintelReinforcementValue, allWindowLintelReinforcementRingValue, allWindowsRevValue
 
     def getDoorsValue():
-        global allDoorsValue, allDoorsLintelValue, allDoorLintelFormworkValue, doorLintelReinforcementValue, allDoorLintelReinforcementRingValue, alldoorFinishingValue
+        global allDoorsValue, allDoorsLintelValue, allDoorLintelFormworkValue, doorLintelReinforcementValue, allDoorLintelReinforcementRingValue, alldoorFinishingValues
         doorTypes = input("How many type of door is used: ")
         # Door Dimension
         doorLengths = []
@@ -332,7 +409,7 @@ class Struct:
         for i in range(1):
             # Loop through to collect the lenght values
             for doorLen in range(doorTypes):
-                doorLenVal = int(input(
+                doorLenVal = float(input(
                     "Enter the lenght for door type %s : " % (doorLen+1)))
                 doorLengths.append((doorLenVal))
                 doorLintelLengths.append(doorLenVal)
@@ -390,7 +467,7 @@ class Struct:
         return allDoorsValue, allDoorsLintelValue, allDoorLintelFormworkValue, doorLintelReinforcementValue, allDoorLintelReinforcementRingValue, alldoorFinishingValues
 
     def getOtherOpeningsValue():
-        global opnLintelValues, allOpnLintelValues, allopnLintelFormworkValues, allOpnLintelReinforcementValues, allOpnLintelReinforcementRingValues
+        global allopnValues, allOpnLintelValues, allOpnLintelFormworkValues, allOpnLintelReinforcementValues, allOpnLintelReinforcementRingValues
         opnTypes = input("How many other opening types are present: ")
         # Ohter openings Dimension
         opnLengths = []
@@ -418,7 +495,7 @@ class Struct:
         for i in range(1):
             # Loop through to collect the lenght values
             for opnLen in range(opnTypes):
-                opnLenVal = int(input(
+                opnLenVal = float(input(
                     "Enter the lenght for opening type %s : " % (opnLen+1)))
                 opnLengths.append((opnLenVal))
                 opnLintelLenghts.append(opnLenVal)
@@ -427,7 +504,7 @@ class Struct:
                 opnLintelReinforcementRingLengths.append(opnLenVal)
 
             for opnWid in range(opnTypes):
-                opnWidVal = int(input(
+                opnWidVal = float(input(
                     "Enter the width for opening type %s : " % (opnWid+1)))
                 opnWidths.append(opnWidVal)
 
@@ -466,7 +543,7 @@ class Struct:
                 allOpnLintelReinforcementValues = round(allOpnLintelReinforcementValues)
                 allOpnLintelReinforcementRingValues = round(allOpnLintelReinforcementRingValues, 2)
         print("Total other openings value is %s" % allopnValues)
-        return opnLintelValues, allOpnLintelValues, allOpnLintelFormworkValues, allOpnLintelReinforcementValues, allOpnLintelReinforcementRingValues
+        return allopnValues, allOpnLintelValues, allOpnLintelFormworkValues, allOpnLintelReinforcementValues, allOpnLintelReinforcementRingValues
 
     def getWallThickness():
         global wtAF, lenghtOfRings
@@ -482,37 +559,61 @@ class Struct:
         return wtAF, lenghtOfRings
 
     def blckWkAboveGndLvl():
+        global blockworkInSuper, headRoom, sumOfAllOpenings, totalLintelArea
         headRoom = float(input("Enter the height of blockwork in superstructure: "))
         blockworkInSuper = girthBAF * headRoom
-        sumOfAllOpenings = allWndowsValue + allDoorsValue + opnLintelValues
+        sumOfAllOpenings = allWndowsValue + allDoorsValue + allopnValues
         totalLintelArea = (allWindowsLintelValue + allDoorsLintelValue + allOpnLintelValues)/wtAF
         totalBlockworkInSuper = blockworkInSuper - (sumOfAllOpenings+totalLintelArea)
+        unit = "M2"
+        exportValueName.append("Blockwork Above Ground Level")
+        exportValue.append(totalBlockworkInSuper)
+        exportValueUnit.append(unit)
         return totalBlockworkInSuper
 
     def plasteringRendering():
-        headRoom = float(input("Enter the height of blockwork in superstructure: "))
         plastblockworkInSuper = (girthBAF * headRoom) * 2
-        plastsumOfAllOpenings = (allWndowsValue + allDoorsValue + opnLintelValues)*2
+        plastsumOfAllOpenings = (allWndowsValue + allDoorsValue + allopnValues)*2
         totalPlastBlockworkInSuper = blockworkInSuper - (sumOfAllOpenings+totalLintelArea)
         print('The Plastering and rendering value is %s' % totalPlastBlockworkInSuper)
+        unit = "M2"
+        exportValueName.append("Plastering and Rendering")
+        exportValue.append(totalPlastBlockworkInSuper)
+        exportValueUnit.append(unit)
         return totalPlastBlockworkInSuper
 
     def floorFinish():
-        flrFinish = areaOfBld - allRcsValues - ((giAF * wtAF) - alldoorFinishingValue)
+        flrFinish = areaOfBld - allRcsValues - ((girthBAF * wtAF) - alldoorFinishingValues)
+        unit = 'M2'
+        exportValueName.append("Floor Finishes")
+        exportValue.append(flrFinish)
+        exportValueUnit.append(unit)
         return flrFinish
 
     def cielingFinish():
-        ceilingFinish = areaOfBld - allRcsValues - (giAF * wtAF)
+        ceilingFinish = areaOfBld - allRcsValues - (girthBAF * wtAF)
+        unit = 'M2'
+        exportValueName.append("Ceiling Finishes")
+        exportValue.append(ceilingFinish)
+        exportValueUnit.append(unit)
         return ceilingFinish
 
     def windowRevels():
         totalWindowRev = allWindowsRevValue
+        unit = "M"
+        exportValueName.append("Window Reveals")
+        exportValue.append(totalWindowRev)
+        exportValueUnit.append(unit)
         return totalWindowRev
 
     def concInLintel():
         concInLint = [allWindowsLintelValue, allDoorsLintelValue, allOpnLintelValues]
         concInLint = sum(concInLint)
         concInLint = round(concInLint, 2)
+        unit = "M3"
+        exportValueName.append("Concrete in Lintel")
+        exportValue.append(concInLint)
+        exportValueUnit.append(unit)
         print("The value of concrete in lintel is %s " % concInLint)
         return concInLint
 
@@ -521,6 +622,10 @@ class Struct:
         reinfInLint = sum(reinfInLint)
         reinfInLint = round(reinfInLint, 2)
         print("The value of reinforcement bars in lintel is %s" % reinfInLint)
+        unit = "KG"
+        exportValueName.append("Reinforcement Bars in Lintel")
+        exportValue.append(reinfInLint)
+        exportValueUnit.append(unit)
         return reinfInLint
 
     def reinforcementRingsInLintel():
@@ -528,11 +633,54 @@ class Struct:
         reinfRingsInLint = sum(reinfRingsInLint)
         reinfRingsInLint = round(reinfRingsInLint, 2)
         print("The value for reinforcement rings in lintel is %s" % reinfRingsInLint)
+        unit = "KG"
+        exportValueName.append("Reinforcement Rings in Lintel")
+        exportValue.append(reinfRingsInLint)
+        exportValueUnit.append(unit)
         return reinfRingsInLint
 
     def formWorkInLintel():
-        formworkInLint = [allWindowLintelFormworkValue, allDoorLintelFormworkValue, allopnLintelFormworkValues]
+        formworkInLint = [allWindowLintelFormworkValue, allDoorLintelFormworkValue, allOpnLintelFormworkValues]
         formworkInLint = sum(formworkInLint)
         formworkInLint = round(formworkInLint, 2)
         print("The value of formwork in lintel is %s" % formworkInLint)
+        unit = "M2"
+        exportValueName.append("Formwork in Lintel")
+        exportValue.append(formworkInLint)
+        exportValueUnit.append(unit)
         return formworkInLint
+
+        # Generating the final value of calculations made
+    def generateSpreadSheet():
+        nameBody = []
+        valueBody = []
+        unitBody = []
+        valuesHeading = ["TRADE LIST", "QUANTITY", "UNIT"]
+        for name in exportValueName:
+            nameBody.append(name)
+
+        for value in exportValue:
+            valueBody.append(value)
+
+        for unit in exportValueUnit:
+            unitBody.append(unit)
+
+            # Write the title of the report
+        with open("report.csv", 'w+', newline='') as report:
+            csvWriter = csv.writer(report)
+            csvWriter.writerow(valuesHeading)
+
+            # Write the names of the report
+        with open("report.csv", 'a', newline=None) as generalCSV:
+            csvWriter = csv.writer(generalCSV)
+            csvWriter.writerow(exportValueName)
+
+            # Write the Values of the report
+        with open("report.csv", 'a', newline=None) as generalCSV:
+            csvWriter = csv.writer(generalCSV)
+            csvWriter.writerow(exportValue)
+
+            # Write the Units of the report
+        with open("report.csv", 'a', newline=None) as generalCSV:
+            csvWriter = csv.writer(generalCSV)
+            csvWriter.writerow(exportValueUnit)
