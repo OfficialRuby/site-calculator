@@ -2,7 +2,7 @@
 import sys
 import time
 import os
-from modules.substructure import Sub
+from modules.structure import Struct
 from modules.superstructure import Super
 
 try:
@@ -14,13 +14,13 @@ except FileExistsError:
     print("REPORTS folder already exists")
 
 try:
-    Sub.getSoftInit()
-    Sub.getRecessValue()
-    Sub.getRingsAndBarDia()
-    Sub.getWallThickness()
-    Sub.getWindowsValue()
-    Sub.getDoorsValue()
-    Sub.getOtherOpeningsValue()
+    Struct.getSoftInit()
+    Struct.getRecessValue()
+    Struct.getRingsAndBarDia()
+    Struct.getWallThickness()
+    Struct.getWindowsValue()
+    Struct.getDoorsValue()
+    Struct.getOtherOpeningsValue()
 
     print('''
     1.  Site Clearance
@@ -43,7 +43,7 @@ try:
     18. Concrete in Lintel
     19. Reiforcement in Lintel
     20. Formwork in Lintel
-    21.  Plastering/Rendering
+    21. Plastering/Rendering
     22. Painting
     23. Floor Finishes
     24. Ceiling Finishes
@@ -62,84 +62,74 @@ try:
             sys.exit()
 
         elif userChoice == '1':
-            Soft.siteClearance()
+            Struct.siteClearance()
 
         elif userChoice == '2':
-            Soft.topSoilExcavation()
+            Struct.topSoilExcavation()
 
         elif userChoice == '3':
-            Soft.remOfTopSoilExcav()
+            Struct.remOfTopSoilExcav()
 
         elif userChoice == '4':
-            Soft.trenchExcavation()
+            Struct.trenchExcavation()
 
         elif userChoice == '5':
-            Soft.levAndCompacting()
+            Struct.levAndCompacting()
 
         elif userChoice == '6':
-            Soft.concFooting()
+            Struct.concFooting()
 
         elif userChoice == '7':
-            Soft.blockWorkInFDN()
+            Struct.blockWorkInFDN()
 
         elif userChoice == '8':
-            Soft.backfilling()
+            Struct.backfilling()
 
         elif userChoice == '9':
-            Soft.remofSurpOffsite()
+            Struct.remofSurpOffsite()
 
         elif userChoice == '10':
-            Soft.latEarthFilling()
+            Struct.latEarthFilling()
 
         elif userChoice == '11':
-            Soft.hardcoreFilling()
+            Struct.hardcoreFilling()
 
         elif userChoice == '12':
-            Soft.floorReinforcement()
+            Struct.floorReinforcement()
 
         elif userChoice == '13':
-            Soft.dampProofCourse()
+            Struct.dampProofCourse()
 
         elif userChoice == '14':
-            Soft.dampProofMembrane()
+            Struct.dampProofMembrane()
 
         elif userChoice == '15':
-            Soft.surfaceLevelingAndCompacting()
+            Struct.surfaceLevelingAndCompacting()
 
         elif userChoice == '16':
-            Soft.oversiteConcrete()
+            Struct.oversiteConcrete()
 
         elif userChoice == '17':
-            Soft.oversiteConcreteFormwork()
+            Struct.oversiteConcreteFormwork()
 
     # SUPERSTRUCTURE
         elif userChoice == '18':
-            Super.concInLintel()
-        elif userChoice == '16':
-            Soft.latEarthFilling()
-        elif userChoice == '16':
-            Soft.latEarthFilling()
-        elif userChoice == '16':
-            Soft.latEarthFilling()
-        elif userChoice == '16':
-            Soft.latEarthFilling()
-        elif userChoice == '16':
-            Soft.latEarthFilling()
-        elif userChoice == '16':
-            Soft.latEarthFilling()
-        elif userChoice == '16':
-            Soft.latEarthFilling()
-        elif userChoice == '16':
-            Soft.latEarthFilling()
-        elif userChoice == '16':
-            Soft.latEarthFilling()
-        elif userChoice == '16':
-            Soft.latEarthFilling()
-        elif userChoice == '16':
-            Soft.latEarthFilling()
-        elif userChoice == '16':
-            Soft.latEarthFilling()
+            Struct.concInLintel()
 
+        elif userChoice == '19':
+            Struct.reinforcementBarsInLintel()
+        elif userChoice == '20':
+            Struct.formWorkInLintel()
+        elif userChoice == '21':
+            Struct.plasteringRendering()
+        elif userChoice == '22':
+            Struct.plasteringRendering()
+        elif userChoice == '23':
+            Struct.floorFinish()
+        elif userChoice == '24':
+            Struct.cielingFinish()
+        elif userChoice == '25':
+            Struct.windowRevels()
         else:
             print("Invalid Input")
 except KeyboardInterrupt:

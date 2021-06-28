@@ -1,12 +1,13 @@
-class Sub:
+class Struct:
     def getSoftInit():
-        global bldLen, bldWid, spread, blockThickness, girthBIF
+        global bldLen, bldWid, spread, blockThicknessInFdn, girthBIF
         print("Please initialize the required values before you continue\n")
         bldLen = float(input(("Enter the length of the building: ")))
         bldWid = float(input("Enter the width of the building: "))
         spread = float(input("Enter the foundation spread: "))
-        blockThickness = float(input("Enter the thickness of blockwork in foundation: "))
+        blockThicknessInFdn = float(input("Enter the thickness of blockwork in foundation: "))
         girthBIF = float(input('Enter the girth of blockwork in foundation: '))
+        girthBAF = float(input("Enter girth for blockwork above foundation: "))
 
     def siteClearance():
         print("Calculating for Site Clearance")
@@ -62,7 +63,7 @@ class Sub:
     def blockWorkInFDN():
         global blockWInFDN, expVal
         blckWkHeight = float(input("Enter the height of blockwork in foundation: "))
-        blockWInFDN = girthBIF * blckWkHeight * blockThickness
+        blockWInFDN = girthBIF * blckWkHeight * blockThicknessInFdn
         expVal = girthBIF * blckWkHeight  # Value to be exported
         print(blockWInFDN)
         return blockWInFDN, expVal
@@ -71,7 +72,7 @@ class Sub:
 
     def backfilling():
         global bckFilling, remSurplusOffsite
-        blockWInFDN2 = girthBIF * (depthOfFdn - ftThickness) * blockThickness
+        blockWInFDN2 = girthBIF * (depthOfFdn - ftThickness) * blockThicknessInFdn
         remSurplusOffsite = blockWInFDN2 + concFT
         bckFilling = trenchExcav - remSurplusOffsite
         print(bckFilling)
@@ -93,7 +94,7 @@ class Sub:
         thicknessOfLatFillling = float(
             input("Enter the the thickness of laterite earth filling: "))
         areaOfBld = bldLen*bldWid
-        peremOfWall = girthBIF * blockThickness
+        peremOfWall = girthBIF * blockThicknessInFdn
         fillingArea = (areaOfBld - allRcsValues - peremOfWall)
         latEarthFill = fillingArea * thicknessOfLatFillling
         latEarthFill = round(latEarthFill, 2)
@@ -203,8 +204,8 @@ class Sub:
         return weightOfBars, weightOfRings
 
     def getWindowsValue():
-        global allWndowsValue, allWindowsLintelValue, allWindowLintelFormworkValue, windowLintelReinforcementValue, allWindowLintelReinforcementRingValue, allWindowsRevValue
-        blockThickness = float(input("Enter the thickness for block: "))
+        global allWndowsValue, allWindowsLintelValue, allWindowLintelFormworkValue, windowLintelReinforcementValue, allWindowLintelReinforcementRingValue, allWindowsRevValue, blockThickness
+        blockThickness = wtAF
         windowTypes = input("How many type of windows is used: ")
         # Windows Dimensions
         windowLengths = []
@@ -237,7 +238,7 @@ class Sub:
         for i in range(1):
             # Loop through to collect the lenght values
             for winLen in range(windowTypes):
-                winLenVal = float(input(
+                winLenVal = int(input(
                     "Enter the lenght for window type %s : " % (winLen+1)))
                 windowLengths.append((winLenVal))
                 windowLintelLens.append(winLenVal)
@@ -271,7 +272,7 @@ class Sub:
                     (windowLintelLens[value] + 0.45) * 0.23 * windowLintelUnits[value] * 3)
                 windowLintelReinforcementValue = ((windowLintelReinforcementLengths[value]+0.65)*4 * windowLintelReinforcementUnits[value]*weightOfBars)
                 windowLintelReinforcementRingValue = (lenghtOfRings * ((windowLintelReinforcementRingLengths[value]+0.45)/0.2)+1) * windowLintelReinforcementRingUnits[value] * weightOfRings
-                windowsRevValue = (((windowRevLengths[value]*2) + (windowRevWidths[value]*2))*windowRevUnits)
+                windowsRevValue = (((windowRevLengths[value]*2) + (windowRevWidths[value]*2))*windowRevUnits[value])
 
                 windowsValues.append(windowsValue)
                 windowLintelValues.append(windowLintelValue)
@@ -338,10 +339,10 @@ class Sub:
                 doorLintelFormworkLengths.append(doorLenVal)
                 doorLintelReinforcementLengths.append(doorLenVal)
                 doorLintelReinforcementRingLengths.append(doorLenVal)
-                doorFinishingLengths.append((doorLenVal))
+                doorFinishingLengths.append(doorLenVal)
 
             for doorWid in range(doorTypes):
-                doorWidVal = int(input(
+                doorWidVal = float(input(
                     "Enter the width for door type %s : " % (doorWid+1)))
                 doorWidths.append(doorWidVal)
 
@@ -383,14 +384,14 @@ class Sub:
         doorLintelReinforcementValue = round(doorLintelReinforcementValue, 2)
         allDoorLintelReinforcementRingValue = sum(doorLintelReinforcementRingValues)
         allDoorLintelReinforcementRingValue = round(doorLintelReinforcementRingValue, 2)
-        allDoorFinishingValues = sum(doorFinishingValues)
-        alldoorFinishingValues = round(doorFinishingValues, 2)
+        allDoorFinishingValue = sum(doorFinishingValues)
+        alldoorFinishingValues = round(allDoorFinishingValue, 2)
         print("Total windows value is %s" % allDoorsValue)
-        return allDoorsValue, allDoorsLintelValue, allDoorLintelFormworkValue, doorLintelReinforcementValue, allDoorLintelReinforcementRingValue, alldoorFinishingValue
+        return allDoorsValue, allDoorsLintelValue, allDoorLintelFormworkValue, doorLintelReinforcementValue, allDoorLintelReinforcementRingValue, alldoorFinishingValues
 
     def getOtherOpeningsValue():
         global opnLintelValues, allOpnLintelValues, allopnLintelFormworkValues, allOpnLintelReinforcementValues, allOpnLintelReinforcementRingValues
-        opnTypes = input("How many type opening is present: ")
+        opnTypes = input("How many other opening types are present: ")
         # Ohter openings Dimension
         opnLengths = []
         opnWidths = []
@@ -460,55 +461,15 @@ class Sub:
                 allOpnLintelReinforcementValues = sum(opnLintelReinforcementValues)
                 allOpnLintelReinforcementRingValues = sum(opnLintelReinforcementRingValues)
                 allopnValues = round(allopnValues, 2)
-                allOpnLintelValues = round(opnLintelValues, 2)
-                allopnLintelFormworkValues = round(allopnLintelFormworkValues)
-                allOpnLintelReinforcementValues = round(opnLintelReinforcementValues)
+                allOpnLintelValues = round(allOpnLintelValues, 2)
+                allOpnLintelFormworkValues = round(allOpnLintelFormworkValues)
+                allOpnLintelReinforcementValues = round(allOpnLintelReinforcementValues)
                 allOpnLintelReinforcementRingValues = round(allOpnLintelReinforcementRingValues, 2)
         print("Total other openings value is %s" % allopnValues)
-        return opnLintelValues, allOpnLintelValues, allopnLintelFormworkValues, allOpnLintelReinforcementValues, allOpnLintelReinforcementRingValues
-
-    def getRecessValue():
-        rcsTypes = input("How many type recess is present: ")
-        rcsLengths = []
-        rcsWidths = []
-        rcsUnits = []
-        rcsValues = []
-        rcsTypes = int(rcsTypes)
-        answer = 0
-        for i in range(1):
-            # Loop through to collect the lenght values
-            for rcsLen in range(rcsTypes):
-                rcsLenVal = int(input(
-                    "Enter the lenght for recess type %s : " % (rcsLen+1)))
-                rcsLengths.append((rcsLenVal))
-
-            for rcsWid in range(rcsTypes):
-                rcsWidVal = int(input(
-                    "Enter the width for recess type %s : " % (rcsWid+1)))
-                rcsWidths.append(rcsWidVal)
-
-            for rcsUnit in range(rcsTypes):
-                rcsUnitVal = int(input(
-                    "How many unit of recess type %s : " % (rcsUnit+1)))
-                rcsUnits.append(rcsUnitVal)
-
-            for value in range(rcsTypes):
-                rcsValue = (
-                    rcsLengths[value] * rcsWidths[value] * rcsUnits[value])
-                rcsValues.append(rcsValue)
-        answer = sum(rcsValues)
-        print("Total recesses value is %s" % answer)
-        return answer
-
-    def getGirth():
-        girthBIF = int(input('Enter the girth of blockwork in foundation: '))
-        girthBAF = int(input("Enter girth for blockwork above foundation: "))
-        print(girthBIF, girthBAF)
-        return girthBIF, girthBAF
+        return opnLintelValues, allOpnLintelValues, allOpnLintelFormworkValues, allOpnLintelReinforcementValues, allOpnLintelReinforcementRingValues
 
     def getWallThickness():
-        global wiIF, wtAF, lenghtOfRings
-        wtIF = blockThickness
+        global wtAF, lenghtOfRings
         wtAF = float(input("Enter the wall thickness above foundation (in meter): "))
         if wtAF == 0.23:
             lenghtOfRings = 0.82
@@ -517,8 +478,8 @@ class Sub:
         else:
             lenghtOfRings = 0.82
 
-        print(wtIF, wtAF, lenghtOfRings)
-        return wtIF, wtAF, lenghtOfRings
+        print(wtAF, lenghtOfRings)
+        return wtAF, lenghtOfRings
 
     def blckWkAboveGndLvl():
         headRoom = float(input("Enter the height of blockwork in superstructure: "))
@@ -528,19 +489,20 @@ class Sub:
         totalBlockworkInSuper = blockworkInSuper - (sumOfAllOpenings+totalLintelArea)
         return totalBlockworkInSuper
 
-    def plastering():
+    def plasteringRendering():
         headRoom = float(input("Enter the height of blockwork in superstructure: "))
         plastblockworkInSuper = (girthBAF * headRoom) * 2
         plastsumOfAllOpenings = (allWndowsValue + allDoorsValue + opnLintelValues)*2
         totalPlastBlockworkInSuper = blockworkInSuper - (sumOfAllOpenings+totalLintelArea)
+        print('The Plastering and rendering value is %s' % totalPlastBlockworkInSuper)
         return totalPlastBlockworkInSuper
 
     def floorFinish():
-        flrFinish = areaOfBld - recess - ((giAF * wtAF) - alldoorFinishingValue)
+        flrFinish = areaOfBld - allRcsValues - ((giAF * wtAF) - alldoorFinishingValue)
         return flrFinish
 
     def cielingFinish():
-        ceilingFinish = areaOfBld - recess - (giAF * wtAF)
+        ceilingFinish = areaOfBld - allRcsValues - (giAF * wtAF)
         return ceilingFinish
 
     def windowRevels():
@@ -553,3 +515,24 @@ class Sub:
         concInLint = round(concInLint, 2)
         print("The value of concrete in lintel is %s " % concInLint)
         return concInLint
+
+    def reinforcementBarsInLintel():
+        reinfInLint = [windowLintelReinforcementValue, doorLintelReinforcementValue, allOpnLintelReinforcementValues]
+        reinfInLint = sum(reinfInLint)
+        reinfInLint = round(reinfInLint, 2)
+        print("The value of reinforcement bars in lintel is %s" % reinfInLint)
+        return reinfInLint
+
+    def reinforcementRingsInLintel():
+        reinfRingsInLint = [allWindowLintelReinforcementRingValue, allDoorLintelReinforcementRingValue, allOpnLintelReinforcementRingValues]
+        reinfRingsInLint = sum(reinfRingsInLint)
+        reinfRingsInLint = round(reinfRingsInLint, 2)
+        print("The value for reinforcement rings in lintel is %s" % reinfRingsInLint)
+        return reinfRingsInLint
+
+    def formWorkInLintel():
+        formworkInLint = [allWindowLintelFormworkValue, allDoorLintelFormworkValue, allopnLintelFormworkValues]
+        formworkInLint = sum(formworkInLint)
+        formworkInLint = round(formworkInLint, 2)
+        print("The value of formwork in lintel is %s" % formworkInLint)
+        return formworkInLint
