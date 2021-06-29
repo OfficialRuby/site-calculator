@@ -55,9 +55,9 @@ try:
         userChoice = input("Please enter the value that corresponds with what you want to calculate: ")
         userChoice = str(userChoice)
         if userChoice == "Q":
+            print("Generating report")
             Struct.generateSpreadSheet()
-            print("Stopping program")
-            print(userChoice)
+            print("Report generated to the REPROTS folder")
             status = False
             sys.exit()
 
